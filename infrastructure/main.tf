@@ -20,6 +20,10 @@ provider "aws" {
   region  = "us-west-2"
 }
 
+resource "aws_ecr_repository" "demo_spring" {
+  name = "demospring"
+}
+
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -97,14 +101,9 @@ resource "aws_cloudwatch_log_group" "demo_spring" {
 }
 
 resource "aws_iam_role" "execution_role" {
-  name = "demospring-execution-role"
-
-  assume_role_policy = data.aws_iam_policy_document.demo_spring_assume_role_policy.json
-
-  inline_policy {
-    name   = "demospring-execution-role-policy"
-    policy = data.aws_iam_policy_document.demo_spring_execution_role_policy.json
-  }
+  name                = "demospring-execution-role"
+  assume_role_policy  = data.aws_iam_policy_document.demo_spring_assume_role_policy.json
+  managed_policy_arns = [data.aws_iam_policy.AmazonECSTaskExecutionRolePolicy.arn]
 }
 
 resource "aws_ecs_cluster" "demo_spring" {
@@ -122,7 +121,7 @@ resource "aws_ecs_task_definition" "demo_spring" {
   container_definitions = jsonencode([
     {
       name  = "demospring"
-      image = "public.ecr.aws/aws-containers/hello-app-runner:latest"
+      image = "${aws_ecr_repository.demo_spring.repository_url}:${var.image_tag}"
       portMappings = [
         {
           containerPort = 8080
