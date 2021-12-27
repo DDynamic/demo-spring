@@ -8,7 +8,7 @@ public class HelloController {
 
     @GetMapping("/hello")
     public String helloGET() {
-        return "Hello world!";
+        return "Hello world from new commit!!";
     }
 
     @GetMapping("/healthCheck")
