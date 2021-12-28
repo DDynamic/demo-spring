@@ -148,6 +148,8 @@ resource "aws_ecs_service" "demo_spring" {
 
   desired_count = 1
 
+  wait_for_steady_state = true
+
   network_configuration {
     subnets          = module.vpc.public_subnets
     assign_public_ip = true

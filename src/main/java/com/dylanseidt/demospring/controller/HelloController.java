@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-    @GetMapping("/hello")
+    @GetMapping("/")
     public String helloGET() {
-        return "Hello world from new commit!!";
+        return "Welcome to the root again!";
     }
 
     @GetMapping("/healthCheck")
